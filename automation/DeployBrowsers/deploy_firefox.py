@@ -11,6 +11,7 @@ import os
 import random
 
 DEFAULT_SCREEN_RES = (1366, 768)  # Default screen res when no preferences are given
+DEFAULT_SCREEN_RES = (1440, 2560)  # Default screen res when no preferences are given
 
 def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery):
     """ launches a firefox instance with parameters set by the input dictionary """
@@ -57,7 +58,8 @@ def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery)
     if profile_settings is None:
         profile_settings = dict()
         profile_settings['screen_res'] = DEFAULT_SCREEN_RES
-        profile_settings['ua_string'] = None
+        profile_settings['ua_string'] = "Mozilla/5.0 (Android 6.0.1; Mobile; rv:46.0) Gecko/46.0 Firefox/46.0"
+        # profile_settings['ua_string'] = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:46.0) Gecko/20100101 Firefox/46.0"
 
     if profile_settings['ua_string'] is not None:
         logger.debug("BROWSER %i: Overriding user agent string with the following: %s" % (browser_params['crawl_id'], profile_settings['ua_string']))

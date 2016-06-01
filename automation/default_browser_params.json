@@ -1,9 +1,9 @@
 {
-    "proxy": true,
+    "proxy": false,
     "extension": {
-        "enabled": false,
+        "enabled": true,
         "cookieInstrument": false,
-        "jsInstrument": false,
+        "jsInstrument": true,
         "cpInstrument": false
     },
     "save_javascript": false,
@@ -14,13 +14,13 @@
     "debugging": false,
     "profile_tar": null,
     "profile_archive_dir": null,
-    "headless": false,
+    "headless": true,
     "browser": "firefox",
-
     "tp_cookies": "always",
     "donottrack": false,
     "ghostery": false,
     "https-everywhere": false,
     "adblock-plus": false,
-    "tracking-protection": false
+    "tracking-protection": false,
+    "ua_string": "Mozilla/5.0 (Android 6.0.1; Mobile; rv:46.0) Gecko/46.0 Firefox/46.0"
 }
