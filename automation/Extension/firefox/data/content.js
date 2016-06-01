@@ -425,7 +425,7 @@ function getPageScript() {
     // prototype must be instrumented instead. Unfortunately this fails to differentiate
     // between sessionStorage and localStorage. Instead, you'll have to look for a sequence
     // of a get for the localStorage object followed by a getItem/setItem for the Storage object.
-    var windowProperties = [ "name", "localStorage", "sessionStorage" ];
+    var windowProperties = [ "name", "localStorage", "sessionStorage", "addEventListener" ];
     windowProperties.forEach(function(property) {
       instrumentObjectProperty(window, "window", property);
     });

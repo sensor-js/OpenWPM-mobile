@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+<title>localStorage example</title>
+  <script type="application/javascript">
+    window.addEventListener('deviceorientation', function(event) {
+      console.log("<br>deviceorientation Event!! " + event.alpha + " : " + event.beta + " : " + event.gamma);
+    })
+    window.addEventListener('devicelight', function(event) {
+      console.log("<br>devicelight Event!! " + event);
+    })
+    window.addEventListener('deviceproximity', function(event) {
+      console.log("<br>deviceproximity Event!! " + event);
+    })
+    window.addEventListener('devicemotion', function(event) {
+      console.log("<br>devicemotion Event!! " + event);
+    })
+  </script>
+ </head>
+ <body>
+ </body></html>
