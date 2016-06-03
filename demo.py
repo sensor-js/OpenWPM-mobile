@@ -17,7 +17,7 @@ for l in open(csv_name).readlines()[1:no_of_sites]:
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
 
 # Update browser configuration (use this for per-browser settings)
-#for i in xrange(NUM_BROWSERS):
+# for i in xrange(NUM_BROWSERS):
 #    browser_params[i]['disable_flash'] = False #Enable flash for all three browsers
 #    browser_params[i]['headless'] = False #Launch only browser 0 headless
     #browser_params[i]['ua_string'] = "Mozilla/5.0 (Android 6.0.1; Mobile; rv:46.0) Gecko/46.0 Firefox/46.0"
@@ -32,7 +32,7 @@ manager = TaskManager.TaskManager(manager_params, browser_params)
 
 # Visits the sites with all browsers simultaneously
 for site in sites:
-    command_sequence = CommandSequence.CommandSequence(site)
+    command_sequence = CommandSequence.CommandSequence(site, reset=True)
     command_sequence.get(sleep=10, timeout=60)
     # command_sequence.dump_profile_cookies(120)
     manager.execute_command_sequence(command_sequence, index=None) # ** = synchronized browsers
