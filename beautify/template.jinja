@@ -2,33 +2,25 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <link rel="stylesheet" href="bootstrap.js">
+        <link rel="stylesheet" href="bootstrap.css">
         <title>{{ title }}</title>
-        <style>
-            table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-                overflow:hidden;
-            }
-            th, td {
-                padding: 5px;
-                text-align: left;
-                overflow:hidden;
-            }
-        </style>
     </head>
     <body>
         <div id="content">
             <h1>Results: {{ len_rows }}</h1>
-            <table style="width:100%">
-                <tr>
-                {% for h in headings %}
-                    <th>{{h}}</th>
-                {% endfor %}
-                </tr>
+            <table class="table table-striped" style="max-width:90%;">
+                <thead>
+                    <tr class="row">
+                        {% for h in headings %}
+                        <th>{{h}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
                 {% for r in rows %}
-                <tr>
+                <tr class="row" style="overflow:hidden;">
                     {% for c in r %}
-                    <td>{{c}}</td>
+                    <td style="max-width:20%;">{{c}}</td>
                     {% endfor %}
                 </tr>
                 {% endfor %}
