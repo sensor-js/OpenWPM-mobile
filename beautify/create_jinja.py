@@ -1,14 +1,15 @@
 #!/usr/bin/env python
-
+import os
 import jinja2
 import sqlite3
 
+TEMPLATE_FILE = "./template.jinja"
+OUTPUT_FILE = "./output.html"
+    
 def make_output(headings, rows):
     templateLoader = jinja2.FileSystemLoader(searchpath="./")
     templateEnv = jinja2.Environment(loader=templateLoader)
-    TEMPLATE_FILE = "./template.jinja"
-    OUTPUT_FILE = "./output.html"
-    template = templateEnv.get_template( TEMPLATE_FILE)
+    template = templateEnv.get_template(TEMPLATE_FILE)
 
     new_rows=[]
     truth = 0
@@ -40,7 +41,7 @@ def make_output(headings, rows):
         f.write(outputText)
 
 def main():
-    SQLITE_FILE = "crawl.sqlite"
+    SQLITE_FILE = os.path.expanduser("~/openwpm/crawl-data.sqlite")
     connection = sqlite3.connect(SQLITE_FILE)
     QUERY="SELECT site_visits.visit_id,site_visits.site_url,javascript.script_url,javascript.parameter_value,javascript.symbol " + \
             " FROM site_visits, javascript " + \

@@ -20,6 +20,8 @@ import time
 import sys
 import os
 
+ENABLE_CRASH_RECOVERY = False
+
 class Browser:
     """
      The Browser class is responsbile for holding all of the
@@ -33,7 +35,7 @@ class Browser:
     def __init__(self, manager_params, browser_params):
         # Constants
         self._SPAWN_TIMEOUT = 120 #seconds
-        self._UNSUCCESSFUL_SPAWN_LIMIT = 4
+        self._UNSUCCESSFUL_SPAWN_LIMIT = 1
 
         # manager parameters
         self.current_profile_path = None
@@ -74,7 +76,7 @@ class Browser:
         """
         # if this is restarting from a crash, update the tar location
         # to be a tar of the crashed browser's history
-        if self.current_profile_path is not None:
+        if ENABLE_CRASH_RECOVERY and self.current_profile_path is not None:
             # tar contents of crashed profile to a temp dir
             tempdir = tempfile.mkdtemp() + "/"
             profile_commands.dump_profile(self.current_profile_path,
@@ -162,7 +164,7 @@ class Browser:
         """
         if self.is_fresh: # Return success if browser is fresh
             return True
-
+        self.logger.debug("BROWSER %i: restarting browser manager" % (self.crawl_id))
         self.kill_browser_manager()
 
         # if crawl should be stateless we can clear profile

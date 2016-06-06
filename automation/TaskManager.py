@@ -460,13 +460,20 @@ class TaskManager:
             return
 
         if browser.restart_required or reset:
-            success = browser.restart_browser_manager(clear_profile = reset)
-            if not success:
-                self.logger.critical("BROWSER %i: Exceeded the maximum allowable "
-                                     "consecutive browser launch failures. "
-                                     "Setting failure_flag." % browser.crawl_id)
-                self.failure_flag = True
-                return
+            while self.failurecount < self.failure_limit:
+                success = browser.restart_browser_manager(clear_profile=reset)
+                if success:
+                    break
+                else:
+                    with self.threadlock:
+                        self.failurecount += 1
+                    if self.failurecount > self.failure_limit:
+                        self.logger.critical("BROWSER %i: Exceeded the maximum allowable "
+                                             "consecutive browser launch failures. "
+                                             "Setting failure_flag." % browser.crawl_id)
+                        self.failure_flag = True
+                        return
+
             browser.restart_required = False
 
     def execute_command_sequence(self, command_sequence, index=None):
