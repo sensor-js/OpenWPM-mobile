@@ -6,7 +6,7 @@ from SocketInterface import clientsocket
 from MPLogger import loggingclient
 from Errors import ProfileLoadError, BrowserConfigError, BrowserCrashError
 
-from multiprocessing import Process, Queue
+from multiprocess import Process, Queue
 from Queue import Empty as EmptyQueue
 from tblib import pickling_support
 pickling_support.install()
@@ -262,14 +262,14 @@ def BrowserManager(command_queue, status_queue, browser_params, manager_params, 
 
         # Read the extension port -- if extension is enabled
         # TODO: This needs to be cleaner
-        if browser_params['browser'] == 'firefox' and browser_params['extension']['enabled']:
+        if browser_params['browser'] == 'firefox' and browser_params['extension_enabled']:
             logger.debug("BROWSER %i: Looking for extension port information in %s" % (browser_params['crawl_id'], prof_folder))
             while not os.path.isfile(prof_folder + 'extension_port.txt'):
                 time.sleep(0.1)
             time.sleep(0.5)
             with open(prof_folder + 'extension_port.txt', 'r') as f:
                 port = f.read().strip()
-            extension_socket = clientsocket()
+            extension_socket = clientsocket(serialization='json')
             extension_socket.connect('127.0.0.1',int(port))
         else:
             extension_socket = None
@@ -300,7 +300,7 @@ def BrowserManager(command_queue, status_queue, browser_params, manager_params, 
                                              extension_socket)
             status_queue.put("OK")
 
-    except (ProfileLoadError, BrowserConfigError) as e:
+    except (ProfileLoadError, BrowserConfigError, AssertionError) as e:
         logger.info("BROWSER %i: %s thrown, informing parent and raising" %
                 (browser_params['crawl_id'], e.__class__.__name__))
         err_info = sys.exc_info()

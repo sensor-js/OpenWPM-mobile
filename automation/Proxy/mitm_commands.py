@@ -6,7 +6,6 @@ import datetime
 import mmh3
 import json
 import zlib
-import os
 
 def encode_to_unicode(msg):
     """
@@ -36,8 +35,8 @@ def process_general_mitm_request(db_socket, browser_params, visit_id, msg):
             visit_id,
             str(datetime.datetime.now()))
 
-    db_socket.send(("INSERT INTO http_requests (crawl_id, url, method, referrer, headers, "
-                    "visit_id, time_stamp) VALUES (?,?,?,?,?,?,?)", data))
+    db_socket.send(("INSERT INTO http_requests_proxy (crawl_id, url, method, "
+                    "referrer, headers, visit_id, time_stamp) VALUES (?,?,?,?,?,?,?)", data))
 
 
 def process_general_mitm_response(db_socket, ldb_socket, logger, browser_params, visit_id, msg):
@@ -59,13 +58,15 @@ def process_general_mitm_response(db_socket, ldb_socket, logger, browser_params,
             str(datetime.datetime.now()),
             content_hash)
 
-    db_socket.send(("INSERT INTO http_responses (crawl_id, url, method, referrer, response_status, "
-                    "response_status_text, headers, location, visit_id, time_stamp, content_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?)", data))
+    db_socket.send(("INSERT INTO http_responses_proxy (crawl_id, url, method, "
+                    "referrer, response_status, response_status_text, headers, "
+                    "location, visit_id, time_stamp, content_hash) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?)", data))
 
 
 def save_javascript_content(ldb_socket, logger, browser_params, msg):
     """ Save javascript files de-duplicated and compressed on disk """
-    if not browser_params['save_javascript']:
+    if not browser_params['save_javascript_proxy']:
         return
 
     # Check if this response is javascript content
@@ -106,11 +107,12 @@ def save_javascript_content(ldb_socket, logger, browser_params, msg):
     else:
         logger.error('BROWSER %i: Received Content-Encoding %s. Not supported by Firefox, skipping archive.' % (browser_params['crawl_id'], str(content_encoding)))
         return
-
-    ldb_socket.send(script)
+    script = encode_to_unicode(script)
 
     # Hash script for deduplication on disk
     hasher = mmh3.hash128
-    script_hash = str(hasher(script) >> 64)
+    script_hash = str(hasher(script.encode('utf-8')) >> 64)
+
+    ldb_socket.send((script, script_hash))
 
     return script_hash

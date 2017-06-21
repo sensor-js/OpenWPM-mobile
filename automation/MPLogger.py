@@ -22,7 +22,7 @@ class ClientSocketHandler(logging.handlers.SocketHandler):
         ei = record.exc_info
         if ei:
             # just to get traceback text into record.exc_text ...
-            dummy = self.format(record)
+            dummy = self.format(record) # noqa
             record.exc_info = None  # to avoid Unpickleable error
         d = dict(record.__dict__)
         d['msg'] = record.getMessage()
@@ -30,7 +30,7 @@ class ClientSocketHandler(logging.handlers.SocketHandler):
         s = json.dumps(d)
         if ei:
             record.exc_info = ei  # for next handler
-        return struct.pack('>I?', len(s), True) + s
+        return struct.pack('>Ic', len(s), 'j') + s
 
 def loggingclient(logger_address, logger_port, level=logging.DEBUG):
     """ Establishes a logger that sends log records to loggingserver """
@@ -90,7 +90,20 @@ def loggingserver(log_file, status_queue):
 
 def _handleLogRecord(obj):
     """ Handle log, logs everything sent. Should filter client-side """
-    record = logging.makeLogRecord(obj)
+
+    # Log message came from browser extension: requires special handling
+    if len(obj) == 2 and obj[0] == 'EXT':
+        obj = json.loads(obj[1])
+        record = logging.LogRecord(name=__name__,
+                                   level=obj['level'],
+                                   pathname=obj['pathname'],
+                                   lineno=obj['lineno'],
+                                   msg=obj['msg'],
+                                   args=obj['args'],
+                                   exc_info=obj['exc_info'],
+                                   func=obj['func'])
+    else:
+        record = logging.makeLogRecord(obj)
     logger = logging.getLogger(record.name)
     logger.handle(record)
 
@@ -104,7 +117,7 @@ def _drain_queue(sock_queue):
 if __name__ == '__main__':
     # Some tests
     import logging, logging.handlers
-    import multiprocessing as mp
+    import multiprocess as mp
 
     # Set up loggingserver
     log_file = '~/mplogger.log'

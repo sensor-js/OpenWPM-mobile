@@ -8,19 +8,57 @@ import subprocess
 import shutil
 import json
 import time
+import sys
 import os
+
+
+def parse_http_stack_trace_str(trace_str):
+    """Parse a stacktrace string and return an array of dict."""
+    stack_trace = []
+    frames = trace_str.split("\n")
+    for frame in frames:
+        try:
+            func_name, rest = frame.split("@", 1)
+            rest, async_cause = rest.rsplit(";", 1)
+            filename, line_no, col_no = rest.rsplit(":", 2)
+            stack_trace.append({
+                                "func_name": func_name,
+                                "filename": filename,
+                                "line_no": line_no,
+                                "col_no": col_no,
+                                "async_cause": async_cause,
+                                })
+        except Exception as exc:
+            print "Exception parsing the stack frame %s %s" % (frame, exc)
+    return stack_trace
 
 def get_version():
     """Return OpenWPM version tag/current commit and Firefox version """
-    openwpm = subprocess.check_output(["git","describe","--tags","--always"]).strip()
+    try:
+        openwpm = subprocess.check_output(["git","describe","--tags","--always"]).strip()
+    except subprocess.CalledProcessError:
+        ver = os.path.join(os.path.dirname(__file__), '../../VERSION')
+        with open(ver, 'r') as f:
+            openwpm = f.readline().strip()
 
-    ff_ini = os.path.join(os.path.dirname(__file__), '../firefox-bin/application.ini')
-    with open(ff_ini, 'r') as f:
-        ff = None
-        for line in f:
-            if line.startswith('Version='):
-                ff = line[8:].strip()
-                break
+    ff_ini = os.path.join(os.path.dirname(__file__),
+            '../../firefox-bin/application.ini')
+    try:
+        with open(ff_ini, 'r') as f:
+            ff = None
+            for line in f:
+                if line.startswith('Version='):
+                    ff = line[8:].strip()
+                    break
+    except IOError as e:
+        raise IOError, \
+              IOError("%s \n Did you run `./install.sh`? OpenWPM "
+                      "requires a Firefox package installed within "
+                      "a `firefox-bin` directory in the root "
+                      "directory of the platform. \n The `application.ini` "
+                      "file is used to determine the version of Firefox "
+                      "present in that directory." % str(e)), \
+              sys.exc_info()[2]
     return openwpm, ff
 
 def get_configuration_string(manager_params, browser_params, versions):
@@ -37,11 +75,10 @@ def get_configuration_string(manager_params, browser_params, versions):
                              indent=2, separators=(',', ': '))
     config_str += "\n\n========== Browser Configuration ==========\n"
     print_params = [deepcopy(x) for x in browser_params]
-    ext_settings = list()
     table_input = list()
     profile_dirs = OrderedDict()
     archive_dirs = OrderedDict()
-    extension_all_disabled = profile_all_none = archive_all_none = True
+    profile_all_none = archive_all_none = True
     for item in print_params:
         crawl_id = item['crawl_id']
 
@@ -50,14 +87,6 @@ def get_configuration_string(manager_params, browser_params, versions):
             profile_all_none = False
         if item['profile_archive_dir'] is not None:
             archive_all_none = False
-        if item['extension']['enabled']:
-            extension_all_disabled = False
-
-        # Separate out extension settings
-        dct = OrderedDict()
-        dct['crawl_id'] = crawl_id
-        dct.update(item.pop('extension'))
-        ext_settings.append(dct)
 
         # Separate out long profile directory strings
         profile_dirs[crawl_id] = item.pop('profile_tar')
@@ -80,12 +109,6 @@ def get_configuration_string(manager_params, browser_params, versions):
                              separators=(',', ': '))
     config_str += '\n\n'
     config_str += tabulate(table_input, headers=key_dict)
-
-    config_str += "\n\n========== Extension Configuration ==========\n"
-    if extension_all_disabled:
-        config_str += "  No extensions enabled"
-    else:
-        config_str += tabulate(ext_settings, headers="keys")
 
     config_str += "\n\n========== Input profile tar files ==========\n"
     if profile_all_none:
@@ -114,7 +137,7 @@ def fetch_adblockplus_list(output_directory, wait_time=20):
     display = Display(visible=0)
     display.start()
 
-    root_dir = os.path.dirname(__file__)
+    root_dir = os.path.join(os.path.dirname(__file__),'..')
     fb = FirefoxBinary(os.path.join(root_dir,'../firefox-bin/firefox'))
 
     fp = webdriver.FirefoxProfile()

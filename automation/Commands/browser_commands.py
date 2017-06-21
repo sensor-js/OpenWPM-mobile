@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import MoveTargetOutOfBoundsException
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
+import os
 import random
 import time
 
@@ -160,7 +161,7 @@ def browse_website(url, num_links, sleep, visit_id, webdriver, proxy_queue,
         links = filter(lambda x: x.is_displayed() == True, links)
         if len(links) == 0:
             break
-        r = int(random.random()*len(links)-1)
+        r = int(random.random()*len(links))
         logger.info("BROWSER %i: visiting internal link %s" % (browser_params['crawl_id'], links[r].get_attribute("href")))
 
         try:
@@ -170,7 +171,8 @@ def browse_website(url, num_links, sleep, visit_id, webdriver, proxy_queue,
             if browser_params['bot_mitigation']:
                 bot_mitigation(webdriver)
             webdriver.back()
-        except Exception, e:
+            wait_until_loaded(webdriver, 300)
+        except Exception:
             pass
 
 def dump_flash_cookies(start_time, visit_id, webdriver, browser_params, manager_params):
@@ -224,3 +226,10 @@ def dump_profile_cookies(start_time, visit_id, webdriver, browser_params, manage
 
     # Close connection to db
     sock.close()
+
+def save_screenshot(screenshot_name, webdriver, browser_params, manager_params):
+    webdriver.save_screenshot(os.path.join(manager_params['screenshot_path'], screenshot_name + '.png'))
+
+def dump_page_source(dump_name, webdriver, browser_params, manager_params):
+    with open(os.path.join(manager_params['source_dump_path'], dump_name + '.html'), 'wb') as f:
+        f.write(webdriver.page_source.encode('utf8') + '\n')

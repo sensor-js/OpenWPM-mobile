@@ -17,10 +17,10 @@ for l in open(csv_name).readlines()[1:no_of_sites]:
 manager_params, browser_params = TaskManager.load_default_params(NUM_BROWSERS)
 
 # Update browser configuration (use this for per-browser settings)
-# for i in xrange(NUM_BROWSERS):
-#    browser_params[i]['disable_flash'] = False #Enable flash for all three browsers
-#    browser_params[i]['headless'] = False #Launch only browser 0 headless
-    #browser_params[i]['ua_string'] = "Mozilla/5.0 (Android 6.0.1; Mobile; rv:46.0) Gecko/46.0 Firefox/46.0"
+for i in xrange(NUM_BROWSERS):
+    browser_params[i]['http_instrument'] = True # Record HTTP Requests and Responses
+    browser_params[i]['disable_flash'] = False #Enable flash for all three browsers
+browser_params[0]['headless'] = True #Launch only browser 0 headless
 
 # Update TaskManager configuration (use this for crawl-wide settings)
 manager_params['data_directory'] = '~/openwpm/'
@@ -32,10 +32,15 @@ manager = TaskManager.TaskManager(manager_params, browser_params)
 
 # Visits the sites with all browsers simultaneously
 for site in sites:
-    command_sequence = CommandSequence.CommandSequence(site, reset=True)
-    command_sequence.get(sleep=10, timeout=60)
-    # command_sequence.dump_profile_cookies(120)
-    manager.execute_command_sequence(command_sequence, index=None) # ** = synchronized browsers
+    command_sequence = CommandSequence.CommandSequence(site)
+
+    # Start by visiting the page
+    command_sequence.get(sleep=0, timeout=60)
+
+    # dump_profile_cookies/dump_flash_cookies closes the current tab.
+    command_sequence.dump_profile_cookies(120)
+
+    manager.execute_command_sequence(command_sequence, index='**') # ** = synchronized browsers
 
 # Shuts down the browsers and waits for the data to finish logging
 manager.close()

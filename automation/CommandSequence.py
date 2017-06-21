@@ -13,12 +13,28 @@ class CommandSequence:
 
     CommandSequence guarantees that a series of commands will be performed
     by a single browser instance.
+
+    NOTE: Commands dump_profile_cookies and dump_flash_cookies will close
+    the current tab - any command that relies on the page still being open,
+    like save_screenshot, extract_links, or dump_page_source, should be
+    called prior to one of those two commands.
     """
 
-    def __init__(self, url, reset=False):
-        """Nothing to do here"""
+    def __init__(self, url, reset=False, blocking=False):
+        """Initialize command sequence.
+
+        Parameters
+        ----------
+        url : str
+            url of page visit the command sequence should execute on
+        reset : bool
+            True if browser should clear state and restart after sequence
+        blocking : bool
+            True if sequence should block parent process during execution
+        """
         self.url = url
         self.reset = reset
+        self.blocking = blocking
         self.commands_with_timeout = []
         self.total_timeout = 0
         self.contains_get_or_browse = False
@@ -38,7 +54,8 @@ class CommandSequence:
         self.contains_get_or_browse = True
 
     def dump_flash_cookies(self, timeout=60):
-        """ dumps the local storage vectors (flash, localStorage, cookies) to db """
+        """ dumps the local storage vectors (flash, localStorage, cookies) to db
+        Side effect: closes the current tab."""
         self.total_timeout += timeout
         if not self.contains_get_or_browse:
             raise CommandExecutionError("No get or browse request preceding "
@@ -47,7 +64,8 @@ class CommandSequence:
         self.commands_with_timeout.append((command, timeout))
 
     def dump_profile_cookies(self, timeout=60):
-        """ dumps from the profile path to a given file (absolute path) """
+        """ dumps from the profile path to a given file (absolute path)
+        Side effect: closes the current tab."""
         self.total_timeout += timeout
         if not self.contains_get_or_browse:
             raise CommandExecutionError("No get or browse request preceding "
@@ -68,4 +86,31 @@ class CommandSequence:
             raise CommandExecutionError("No get or browse request preceding "
                                         "the dump storage vectors command", self)
         command = ('EXTRACT_LINKS',)
+        self.commands_with_timeout.append((command, timeout))
+
+    def save_screenshot(self, screenshot_name, timeout=30):
+        """Saves screenshot of page to 'screenshots' directory in data directory."""
+        self.total_timeout += timeout
+        if not self.contains_get_or_browse:
+            raise CommandExecutionError("No get or browse request preceding "
+                                        "the save screenshot command", self)
+        command = ('SAVE_SCREENSHOT', screenshot_name,)
+        self.commands_with_timeout.append((command, timeout))
+
+    def dump_page_source(self, dump_name, timeout=30):
+        """Dumps rendered source of current page visit to 'sources' directory."""
+        self.total_timeout += timeout
+        if not self.contains_get_or_browse:
+            raise CommandExecutionError("No get or browse request preceding "
+                                        "the dump page source command", self)
+        command = ('DUMP_PAGE_SOURCE', dump_name,)
+        self.commands_with_timeout.append((command, timeout))
+
+    def run_custom_function(self, function_handle, func_args=(), timeout=30):
+        """Run a custom by passing the function handle"""
+        self.total_timeout += timeout
+        if not self.contains_get_or_browse:
+            raise CommandExecutionError("No get or browse request preceding "
+                                        "the dump page source command", self)
+        command = ('RUN_CUSTOM_FUNCTION', function_handle, func_args)
         self.commands_with_timeout.append((command, timeout))

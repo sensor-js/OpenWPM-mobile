@@ -4,21 +4,21 @@ import os
 
 from ..automation import TaskManager
 from ..automation.Errors import BrowserConfigError
-from ..automation.platform_utils import fetch_adblockplus_list
+from ..automation.utilities.platform_utils import fetch_adblockplus_list
+from ..automation.utilities import domain_utils, db_utils
+
 import utilities
 import expected
+from openwpmtest import OpenWPMTest
 
-psl = utilities.get_psl()
+psl = domain_utils.get_psl()
 
 
-class TestABP():
-    NUM_BROWSERS = 1
+class TestABP(OpenWPMTest):
 
-    def get_config(self, data_dir):
-        manager_params, browser_params = TaskManager.load_default_params(self.NUM_BROWSERS)
-        manager_params['data_directory'] = data_dir
-        manager_params['log_directory'] = data_dir
-        browser_params[0]['headless'] = True
+    def get_config(self, data_dir=""):
+        manager_params, browser_params = self.get_test_config(data_dir)
+        browser_params[0]['http_instrument'] = True
         browser_params[0]['adblock-plus'] = True
         return manager_params, browser_params
 
@@ -36,10 +36,10 @@ class TestABP():
         browser_params[0]['adblock-plus_list_location'] = list_loc
         manager = TaskManager.TaskManager(manager_params, browser_params)
         manager.get(utilities.BASE_TEST_URL + '/abp/adblock_plus_test.html')
-        manager.close(post_process=False)
+        manager.close()
 
         db = os.path.join(data_dir, manager_params['database_name'])
-        rows = utilities.query_db(db, "SELECT url FROM http_requests")
+        rows = db_utils.query_db(db, "SELECT url FROM http_requests")
         urls = set()
         for url, in rows:
             ps1 = psl.get_public_suffix(urlparse(url).hostname)
@@ -48,11 +48,11 @@ class TestABP():
                 urls.add(url)
         assert urls == expected.adblockplus
 
-    def test_error_with_missing_option(self, tmpdir):
-        manager_params, browser_params = self.get_config(str(tmpdir))
+    def test_error_with_missing_option(self):
+        manager_params, browser_params = self.get_config()
         with pytest.raises(BrowserConfigError):
             manager = TaskManager.TaskManager(manager_params, browser_params)
-            manager.close(post_process=False)
+            manager.close()
 
     def test_error_with_missing_list(self, tmpdir):
         data_dir = str(tmpdir)
@@ -61,4 +61,4 @@ class TestABP():
         browser_params[0]['adblock-plus_list_location'] = list_loc
         with pytest.raises(BrowserConfigError):
             manager = TaskManager.TaskManager(manager_params, browser_params)
-            manager.close(post_process=False)
+            manager.close()

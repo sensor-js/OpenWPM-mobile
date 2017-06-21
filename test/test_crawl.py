@@ -4,7 +4,9 @@ import pytest
 import os
 
 from ..automation import TaskManager
-import utilities
+from ..automation.utilities import domain_utils, db_utils
+from openwpmtest import OpenWPMTest
+
 
 TEST_SITES = [
     'http://google.com',
@@ -29,26 +31,22 @@ TEST_SITES = [
     'http://yahoo.co.jp'
 ]
 
-psl = utilities.get_psl()
+psl = domain_utils.get_psl()
 
 
-class TestCrawl():
+class TestCrawl(OpenWPMTest):
     """ Runs a short test crawl.
 
     This should be used to test any features that require real
     crawl data. This should be avoided if possible, as controlled
     tests will be easier to debug
     """
-    NUM_BROWSERS = 1
 
-    def get_config(self, data_dir):
-        manager_params, browser_params = TaskManager.load_default_params(self.NUM_BROWSERS)
-        manager_params['data_directory'] = data_dir
-        manager_params['log_directory'] = data_dir
-        manager_params['db'] = os.path.join(manager_params['data_directory'],
-                                            manager_params['database_name'])
-        browser_params[0]['profile_archive_dir'] = os.path.join(data_dir, 'browser_profile')
-        browser_params[0]['headless'] = True
+    def get_config(self, data_dir=""):
+        manager_params, browser_params = self.get_test_config(data_dir)
+        browser_params[0]['profile_archive_dir'] =\
+            os.path.join(manager_params['data_directory'], 'browser_profile')
+        browser_params[0]['http_instrument'] = True
         return manager_params, browser_params
 
     @pytest.mark.slow
@@ -67,7 +65,7 @@ class TestCrawl():
             manager.get(site)
         ff_db_tar = os.path.join(browser_params[0]['profile_archive_dir'],
                                  'profile.tar.gz')
-        manager.close(post_process=False)
+        manager.close()
 
         # Extract crawl profile
         with tarfile.open(ff_db_tar) as tar:
@@ -79,14 +77,14 @@ class TestCrawl():
         crawl_db = manager_params['db']
 
         # Grab urls from crawl database
-        rows = utilities.query_db(crawl_db, "SELECT url FROM http_requests")
+        rows = db_utils.query_db(crawl_db, "SELECT url FROM http_requests")
         req_ps = set()  # visited domains from http_requests table
         for url, in rows:
             req_ps.add(psl.get_public_suffix(urlparse(url).hostname))
 
         hist_ps = set()  # visited domains from CrawlHistory Table
         successes = dict()
-        rows = utilities.query_db(crawl_db, "SELECT arguments, bool_success "
+        rows = db_utils.query_db(crawl_db, "SELECT arguments, bool_success "
                                   "FROM CrawlHistory WHERE command='GET'")
         for url, success in rows:
             ps = psl.get_public_suffix(urlparse(url).hostname)
@@ -95,7 +93,7 @@ class TestCrawl():
 
         # Grab urls from Firefox database
         profile_ps = set()  # visited domains from firefox profile
-        rows = utilities.query_db(ff_db, "SELECT url FROM moz_places")
+        rows = db_utils.query_db(ff_db, "SELECT url FROM moz_places")
         for host, in rows:
             try:
                 profile_ps.add(psl.get_public_suffix(urlparse(host).hostname))
@@ -114,20 +112,20 @@ class TestCrawl():
                 continue
 
             # Get the visit id for the url
-            rows = utilities.query_db(crawl_db,
+            rows = db_utils.query_db(crawl_db,
                                       "SELECT visit_id FROM site_visits "
                                       "WHERE site_url = ?",
                                       ('http://' + url,))
             visit_id = rows[0]
 
-            rows = utilities.query_db(crawl_db,
+            rows = db_utils.query_db(crawl_db,
                                       "SELECT COUNT(*) FROM http_responses "
                                       "WHERE visit_id = ?",
                                       (visit_id,))
             if rows[0] > 1:
                 continue
 
-            rows = utilities.query_db(crawl_db,
+            rows = db_utils.query_db(crawl_db,
                                       "SELECT response_status, location FROM "
                                       "http_responses WHERE visit_id = ?",
                                       (visit_id,))

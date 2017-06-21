@@ -6,9 +6,10 @@ from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium import webdriver
 
 from pyvirtualdisplay import Display
-import shutil
-import os
 import random
+import shutil
+import json
+import os
 
 DEFAULT_SCREEN_RES = (1366, 768)  # Default screen res when no preferences are given
 DEFAULT_SCREEN_RES = (1440, 2560)  # Default screen res when no preferences are given
@@ -72,25 +73,29 @@ def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery)
         display_port = display.cmd_param[5][1:]
     status_queue.put(('STATUS','Display',(display_pid, display_port)))
 
-    if browser_params['debugging']:
-        firebug_loc = os.path.join(root_dir, 'firefox_extensions/firebug-1.11.0.xpi')
-        fp.add_extension(extension=firebug_loc)
-        fp.set_preference("extensions.firebug.currentVersion", "1.11.0")  # Avoid startup screen
-
-    if browser_params['extension']['enabled']:
-        ext_loc = os.path.join(root_dir + "/../", 'Extension/firefox/@openwpm-0.0.1.xpi')
+    # Write extension configuration
+    if browser_params['extension_enabled']:
+        ext_loc = os.path.join(root_dir + "/../", 'Extension/firefox/openwpm.xpi')
         ext_loc = os.path.normpath(ext_loc)
         fp.add_extension(extension=ext_loc)
-        with open(browser_profile_path + 'database_settings.txt', 'w') as f:
-            host, port = manager_params['aggregator_address']
-            crawl_id = browser_params['crawl_id']
-            f.write(host + ',' + str(port) + ',' + str(crawl_id))
-            f.write(','+str(browser_params['extension']['cookieInstrument']))
-            f.write(','+str(browser_params['extension']['jsInstrument']))
-            f.write(','+str(browser_params['extension']['cpInstrument']))
+        fp.set_preference("extensions.@openwpm.sdk.console.logLevel", "all")
+        extension_config = dict()
+        extension_config.update(browser_params)
+        extension_config['logger_address'] = manager_params['logger_address']
+        extension_config['sqlite_address'] = manager_params['aggregator_address']
+        if manager_params.has_key('ldb_address'):
+            extension_config['leveldb_address'] = manager_params['ldb_address']
+        else:
+            extension_config['leveldb_address'] = None
+        extension_config['testing'] = manager_params['testing']
+        with open(browser_profile_path + 'browser_params.json', 'w') as f:
+            json.dump(extension_config, f)
         logger.debug("BROWSER %i: OpenWPM Firefox extension loaded" % browser_params['crawl_id'])
 
     if browser_params['proxy']:
+        logger.warning("BROWSER %i: Use of the proxy is DEPRECATED and will be "
+                       "removed from future releases. Use http_instrument." %
+                       browser_params['crawl_id'])
         PROXY_HOST = "localhost"
         PROXY_PORT = browser_params['proxy']
 
