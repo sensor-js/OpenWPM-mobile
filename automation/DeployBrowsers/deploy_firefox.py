@@ -12,7 +12,8 @@ import json
 import os
 
 DEFAULT_SCREEN_RES = (1366, 768)  # Default screen res when no preferences are given
-DEFAULT_SCREEN_RES = (1440, 2560)  # Default screen res when no preferences are given
+DEFAULT_SCREEN_RES = (408, 678)  # Nexus 6p as reported by javascript
+
 
 def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery):
     """ launches a firefox instance with parameters set by the input dictionary """
