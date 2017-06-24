@@ -6,7 +6,7 @@ NUM_BROWSERS = 15
 sites = []
 csv_name = "top-1m.csv"
 no_of_sites = 100000
-for l in open(csv_name).readlines()[1:no_of_sites]:
+for l in open(csv_name).readlines()[0:no_of_sites]:
     site = l.split(",")[-1].rstrip()
     sites.append(site)
 
@@ -31,7 +31,7 @@ manager_params['log_directory'] = '~/openwpm/'
 manager = TaskManager.TaskManager(manager_params, browser_params)
 
 # Visits the sites with all browsers simultaneously
-for rank, site in enumerate(sites):
+for rank, site in enumerate(sites, 1):
     url = "http://%s" % site
     command_sequence = CommandSequence.CommandSequence(url, reset=True)
 
