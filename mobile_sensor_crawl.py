@@ -36,7 +36,7 @@ for rank, site in enumerate(sites, 1):
 
     # Start by visiting the page
     command_sequence.get(sleep=10, timeout=60)
-    command_sequence.save_screenshot('%d_%s_screenshot' % (rank, site))
+    # command_sequence.save_screenshot('%d_%s_screenshot' % (rank, site))
     # dump_profile_cookies/dump_flash_cookies closes the current tab.
     command_sequence.dump_profile_cookies(120)
 
