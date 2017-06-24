@@ -18,7 +18,6 @@ for i in xrange(NUM_BROWSERS):
     browser_params[i]['http_instrument'] = True  # Record HTTP Requests and Responses
     browser_params[i]['disable_flash'] = True  # Disable flash for all browsers
     browser_params[i]['js_instrument'] = True  # Enable JS instrumentation
-    browser_params[i]['cp_instrument'] = True  # Enable content policy instrumentation
     browser_params[i]['save_javascript'] = True  # save JS files
     browser_params[i]['headless'] = True  # headless
 
