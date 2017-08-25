@@ -162,3 +162,6 @@ def optimize_prefs(fp):
 
     # Disable Hello
     fp.set_preference("loop.enabled", False)
+
+    # Disable Plugins, fixes mimeTypes as well.
+    fp.set_preference("plugin.disable", True)
