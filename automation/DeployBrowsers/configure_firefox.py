@@ -179,6 +179,10 @@ def set_mobile_prefs(fp):
     # Disable Plugins, fixes mimeTypes as well.
     fp.set_preference("plugin.disable", True)
 
+    # Setting window screen depth.
+    fp.set_preference("window.screen.colorDepth", 32)
+    fp.set_prefernece("window.screen.pixelDepth", 32)
+
     # For browser.xml binding
     # cacheRatio* is a ratio that determines the amount of pixels to cache. The
     # ratio is multiplied by the viewport width or height to get the displayports
