@@ -26,6 +26,9 @@ def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery)
     browser_profile_path = fp.path + '/'
     status_queue.put(('STATUS','Profile Created',browser_profile_path))
 
+    # Set all prefs related to mobile js
+    configure_firefox.set_mobile_prefs(fp)
+
     profile_settings = None  # Imported browser settings
     if browser_params['profile_tar'] and not crash_recovery:
         logger.debug("BROWSER %i: Loading initial browser profile from: %s" % (browser_params['crawl_id'], browser_params['profile_tar']))
