@@ -181,7 +181,7 @@ def set_mobile_prefs(fp):
 
     # Setting window screen depth.
     fp.set_preference("window.screen.colorDepth", 32)
-    fp.set_prefernece("window.screen.pixelDepth", 32)
+    fp.set_preference("window.screen.pixelDepth", 32)
 
     # For browser.xml binding
     # cacheRatio* is a ratio that determines the amount of pixels to cache. The
@@ -276,7 +276,7 @@ def set_mobile_prefs(fp):
     fp.set_preference("network.buffer.cache.size",  16384)
 
     # predictive actions
-    fp.set_preference("network.predictor.enabled", True)
+    fp.set_preference("network.predictor.enabled", False)
     fp.set_preference("network.predictor.max-db-size", 2097152)     # bytes
     fp.set_preference("network.predictor.preserve", 50)     # percentage of predictor data to keep when cleaning up
 
@@ -359,7 +359,7 @@ def set_mobile_prefs(fp):
     # fp.set_preference("xpinstall.signatures.required", False)
 
     fp.set_preference("extensions.enabledScopes", 1)
-    fp.set_preference("extensions.autoupdate.enabled", True)
+    fp.set_preference("extensions.autoupdate.enabled", False)
     fp.set_preference("extensions.autoupdate.interval", 86400)
     # webdriver pref
     # fp.set_preference("extensions.update.enabled", True)
