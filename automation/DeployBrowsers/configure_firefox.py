@@ -178,18 +178,20 @@ def set_mobile_prefs(fp, platform):
     """
 
     if platform == "android":
-        fp.set_preference("window.navigator.platform", "")
-        fp.set_preference("window.navigator.appVersion", "")
+        fp.set_preference("window.navigator.platform", "Linux armv7l")
+        fp.set_preference("window.navigator.appVersion", "5.0 (Android 7.0)")
+        color_depth = 24
     elif platform == "iphone":
-        fp.set_preference("window.navigator.platform", "")
-        fp.set_preference("window.navigator.appVersion", "")
+        fp.set_preference("window.navigator.platform", "iPhone")
+        fp.set_preference("window.navigator.appVersion", "iPhone")
+        color_depth = 32
 
     # Disable Plugins, fixes mimeTypes as well.
     fp.set_preference("plugin.disable", True)
 
     # Setting window screen depth.
-    fp.set_preference("window.screen.colorDepth", 32)
-    fp.set_preference("window.screen.pixelDepth", 32)
+    fp.set_preference("window.screen.colorDepth", color_depth)
+    fp.set_preference("window.screen.pixelDepth", color_depth)
 
     # For browser.xml binding
     # cacheRatio* is a ratio that determines the amount of pixels to cache. The
