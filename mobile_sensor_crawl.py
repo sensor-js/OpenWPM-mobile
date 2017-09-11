@@ -21,6 +21,7 @@ for i in xrange(NUM_BROWSERS):
     browser_params[i]['save_javascript'] = True  # save JS files
     browser_params[i]['headless'] = True  # headless
     browser_params[i]['trigger_sensor_events'] = True  # fake sensor events
+    browser_params[i]['mobile_platform'] = "android" # or "iphone"
 
 # Update TaskManager configuration (use this for crawl-wide settings)
 manager_params['data_directory'] = '~/openwpm/'
