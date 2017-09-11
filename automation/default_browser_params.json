@@ -20,8 +20,6 @@
     "https-everywhere": false,
     "adblock-plus": false,
     "tracking-protection": false,
-    "ua_string": "Mozilla/5.0 (Android 6.0.1; Mobile; rv:46.0) Gecko/46.0 Firefox/46.0",
-
     "proxy": false,
     "save_javascript_proxy": false
 }
