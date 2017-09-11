@@ -49,6 +49,15 @@ exports.main = function(options, callbacks) {
       contentScriptFile: data.url("remove_webdriver_attributes.js")
     });
   }
+  // Trigger artificial sensor events
+  if (config['trigger_sensor_events']) {
+    console.log("Enabling fake sensor events");
+    pageMod.PageMod({
+      include: "*",
+      contentScriptWhen: "ready",
+      contentScriptFile: data.url("trigger_sensor_events.js")
+    });
+  }
   if (config['cookie_instrument']) {
     loggingDB.logDebug("Cookie instrumentation enabled");
     cookieInstrument.run(config['crawl_id']);

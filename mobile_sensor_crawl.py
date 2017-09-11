@@ -20,6 +20,7 @@ for i in xrange(NUM_BROWSERS):
     browser_params[i]['js_instrument'] = True  # Enable JS instrumentation
     browser_params[i]['save_javascript'] = True  # save JS files
     browser_params[i]['headless'] = True  # headless
+    browser_params[i]['trigger_sensor_events'] = True  # fake sensor events
 
 # Update TaskManager configuration (use this for crawl-wide settings)
 manager_params['data_directory'] = '~/openwpm/'
