@@ -10,7 +10,6 @@ import random
 import shutil
 import json
 import os
-from pygments.unistring import val
 
 # DEFAULT_SCREEN_RES = (1366, 768)  # Default screen res when no preferences are given
 # DEFAULT_SCREEN_RES = (408, 678)  # Nexus 6p as reported by javascript
