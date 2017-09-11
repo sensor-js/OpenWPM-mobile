@@ -38,7 +38,7 @@ function getPageScript() {
       // Firefox and Chrome on Android don't seem to support this event
       var deviceproximity_event = new DeviceProximityEvent('deviceproximity', {
         'min': 0,
-        'max': 5,  // ga: max is 100 for my Moto G5 plus
+        'max': 100,
         'value': 3,
         'bubbles': true,
         'cancelable': true
@@ -57,9 +57,9 @@ function getPageScript() {
 
     function trigger_deviceorientation_event(){
       var deviceorientation_event = new DeviceOrientationEvent('deviceorientation', {
-        'alpha': 43.1234,
-        'beta': 32.9876,
-        'gamma': 21.6543,
+        'alpha': 43.1234 + random_fraction(),
+        'beta': 32.9876 + random_fraction(),
+        'gamma': 21.6543 + random_fraction(),
         'bubbles': true,
         'cancelable': true
       });
@@ -69,26 +69,32 @@ function getPageScript() {
     function trigger_devicemotion_event(){
       var devicemotion_event = new DeviceMotionEvent('devicemotion', {
         'acceleration':{
-          'x':0.1256,
-          'y':-0.1234,
-          'z':-0.1845
+          'x':0.1256 + random_fraction(),
+          'y':-0.1234 + random_fraction(),
+          'z':-0.1845 + random_fraction()
         },
         'accelerationIncludingGravity':{
-          'x':0.0256,
-          'y':0.1234,
-          'z':9.7568
+          'x':0.0256 + random_fraction(),
+          'y':0.1234 + random_fraction(),
+          'z':9.7568 + random_fraction()
         },
         'rotationRate':{
-          'alpha':0.0005,
-          'beta':0.0034,
-          'gamma':-0.0048
+          'alpha':0.0005 + random_fraction(),
+          'beta':0.0034 + random_fraction(),
+          'gamma':-0.0048 + random_fraction()
         },
-        'interval': 16.6660,
+        'interval': 16.6660 + random_fraction(),
         'bubbles': true,
         'cancelable': true
       });
       window.dispatchEvent(devicemotion_event)
     }
+
+    function random_fraction(leading_zeroes){
+      var leading_zeroes = leading_zeroes || 5;
+      return Math.random() / Math.pow(10, leading_zeroes);
+    }
+
     console.log("Fake sensor events will be dispatched!");
 
   } + "());";
