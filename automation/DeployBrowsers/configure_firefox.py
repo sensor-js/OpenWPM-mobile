@@ -163,7 +163,7 @@ def optimize_prefs(fp):
     # Disable Hello
     fp.set_preference("loop.enabled", False)
 
-def set_mobile_prefs(fp):
+def set_mobile_prefs(fp, platform):
     """
     Set all the prefs related to mobile firefox.
     All preferences set based on values found at:
@@ -176,6 +176,14 @@ def set_mobile_prefs(fp):
     MOZ_ANDROID_APZ -> True
     MOZ_UPDATER     -> False
     """
+
+    if platform == "android":
+        fp.set_preference("window.navigator.platform", "")
+        fp.set_preference("window.navigator.appVersion", "")
+    elif platform == "iphone":
+        fp.set_preference("window.navigator.platform", "")
+        fp.set_preference("window.navigator.appVersion", "")
+
     # Disable Plugins, fixes mimeTypes as well.
     fp.set_preference("plugin.disable", True)
 
