@@ -10,9 +10,12 @@ import random
 import shutil
 import json
 import os
+from pygments.unistring import val
 
-DEFAULT_SCREEN_RES = (1366, 768)  # Default screen res when no preferences are given
-DEFAULT_SCREEN_RES = (408, 678)  # Nexus 6p as reported by javascript
+# DEFAULT_SCREEN_RES = (1366, 768)  # Default screen res when no preferences are given
+# DEFAULT_SCREEN_RES = (408, 678)  # Nexus 6p as reported by javascript
+ANDROID_SCREEN_RES = (360, 592)  # Moto G5
+IPHONE_SCREEN_RES = (375, 667)  # iPhone
 
 
 def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery):
@@ -27,7 +30,8 @@ def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery)
     status_queue.put(('STATUS','Profile Created',browser_profile_path))
 
     # Set all prefs related to mobile js
-    configure_firefox.set_mobile_prefs(fp, browser_params['mobile_platform'])
+    mobile_platform = browser_params['mobile_platform']
+    configure_firefox.set_mobile_prefs(fp, mobile_platform)
 
     profile_settings = None  # Imported browser settings
     if browser_params['profile_tar'] and not crash_recovery:
@@ -62,10 +66,14 @@ def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery)
     # If profile settings still not set - set defaults
     if profile_settings is None:
         profile_settings = dict()
-        profile_settings['screen_res'] = DEFAULT_SCREEN_RES
-        profile_settings['ua_string'] = "Mozilla/5.0 (Android 6.0.1; Mobile; rv:46.0) Gecko/46.0 Firefox/46.0"
-        # profile_settings['ua_string'] = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:46.0) Gecko/20100101 Firefox/46.0"
-
+        if mobile_platform == "android":
+            profile_settings['screen_res'] = ANDROID_SCREEN_RES
+            profile_settings['ua_string'] = "Mozilla/5.0 (Android 7.0; Mobile; rv:55.0) Gecko/55.0 Firefox/55.0"
+        elif mobile_platform == "iphone":
+            profile_settings['screen_res'] = IPHONE_SCREEN_RES
+            profile_settings['ua_string'] = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4"
+        else:
+            raise ValueError("Mobile mobile_platform value is not recognized")
     if profile_settings['ua_string'] is not None:
         logger.debug("BROWSER %i: Overriding user agent string with the following: %s" % (browser_params['crawl_id'], profile_settings['ua_string']))
         fp.set_preference("general.useragent.override", profile_settings['ua_string'])

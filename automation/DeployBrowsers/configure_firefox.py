@@ -4,6 +4,7 @@ import shutil
 import sys
 import os
 
+
 def privacy(browser_params, fp, root_dir, browser_profile_path):
     """
     Configure the privacy settings in Firefox. This includes:
