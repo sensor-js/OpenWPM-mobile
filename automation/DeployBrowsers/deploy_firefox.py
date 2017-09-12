@@ -14,7 +14,7 @@ import os
 # DEFAULT_SCREEN_RES = (1366, 768)  # Default screen res when no preferences are given
 # DEFAULT_SCREEN_RES = (408, 678)  # Nexus 6p as reported by javascript
 ANDROID_SCREEN_RES = (360, 592)  # Moto G5
-IPHONE_SCREEN_RES = (375, 667)  # iPhone
+IPHONE_SCREEN_RES = (375, 667)  # iPhone6
 
 
 def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery):
