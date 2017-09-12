@@ -184,7 +184,7 @@ def set_mobile_prefs(fp, platform):
         color_depth = 24
     elif platform == "iphone":
         fp.set_preference("window.navigator.platform", "iPhone")
-        fp.set_preference("window.navigator.appVersion", "5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4)
+        fp.set_preference("window.navigator.appVersion", "5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4")
         color_depth = 32
 
     # Disable Plugins, fixes mimeTypes as well.
