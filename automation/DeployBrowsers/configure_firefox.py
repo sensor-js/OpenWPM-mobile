@@ -177,19 +177,25 @@ def set_mobile_prefs(fp, platform):
     MOZ_ANDROID_APZ -> True
     MOZ_UPDATER     -> False
     """
-
+    color_depth=None
+    oscpu=None
     if platform == "android":
-        fp.set_preference("window.navigator.platform", "Linux armv7l")
-        fp.set_preference("window.navigator.appVersion", "5.0 (Android 7.0)")
+        fp.set_preference("general.platform.override", "Linux armv7l")
+        fp.set_preference("general.appversion.override", "5.0 (Android 7.0)")
         color_depth = 24
+        oscpu="Linux armv7l"
     elif platform == "iphone":
-        fp.set_preference("window.navigator.platform", "iPhone")
-        fp.set_preference("window.navigator.appVersion", "5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4")
+        fp.set_preference("general.platform.override", "iPhone")
+        fp.set_preference("general.appversion.override", "5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4")
         color_depth = 32
-
+        oscpu="undefined"
+        
     # Disable Plugins, fixes mimeTypes as well.
     fp.set_preference("plugin.disable", True)
 
+    # setting oscpu property
+    fp.set_preference("general.oscpu.override",oscpu)
+    
     # Setting window screen depth.
     fp.set_preference("window.screen.colorDepth", color_depth)
     fp.set_preference("window.screen.pixelDepth", color_depth)

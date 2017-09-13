@@ -68,9 +68,11 @@ def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery)
         if mobile_platform == "android":
             profile_settings['screen_res'] = ANDROID_SCREEN_RES
             profile_settings['ua_string'] = "Mozilla/5.0 (Android 7.0; Mobile; rv:55.0) Gecko/55.0 Firefox/55.0"
+            profile_settings['color_depth'] = 24
         elif mobile_platform == "iphone":
             profile_settings['screen_res'] = IPHONE_SCREEN_RES
             profile_settings['ua_string'] = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) FxiOS/7.5b3349 Mobile/14F89 Safari/603.2.4"
+            profile_settings['color_depth'] = 32
         else:
             raise ValueError("Mobile mobile_platform value is not recognized")
     if profile_settings['ua_string'] is not None:
@@ -78,7 +80,7 @@ def deploy_firefox(status_queue, browser_params, manager_params, crash_recovery)
         fp.set_preference("general.useragent.override", profile_settings['ua_string'])
 
     if browser_params['headless']:
-        display = Display(visible=0, size=profile_settings['screen_res'])
+        display = Display(visible=0, size=profile_settings['screen_res'])#,color_depth=profile_settings['color_depth'])
         display.start()
         display_pid = display.pid
         display_port = display.cmd_param[5][1:]
