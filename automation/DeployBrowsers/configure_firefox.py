@@ -638,7 +638,8 @@ def set_mobile_prefs(fp, platform):
     # This pref isn't actually used anymore, but we're leaving this here to avoid changing
     # the default so that we can migrate a user-set pref. See bug 885357.
     fp.set_preference("plugins.click_to_play", True)
-    # The default value for nsIPluginTag.enabledState (STATE_CLICKTOPLAY = 1)
+    # STATE_DISABLED = 0
+    # https://dxr.mozilla.org/mozilla-esr45/source/dom/plugins/base/nsIPluginTag.idl#15
     fp.set_preference("plugin.default.state", 0)
 
     # product URLs
