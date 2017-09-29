@@ -632,14 +632,15 @@ def set_mobile_prefs(fp, platform):
     fp.set_preference("browser.ui.selection.distance", 250)
 
     # plugins
-    fp.set_preference("plugin.disable", False)
+    # fp.set_preference("plugin.disable", False)
     fp.set_preference("dom.ipc.plugins.enabled", False)
 
     # This pref isn't actually used anymore, but we're leaving this here to avoid changing
     # the default so that we can migrate a user-set pref. See bug 885357.
     fp.set_preference("plugins.click_to_play", True)
-    # The default value for nsIPluginTag.enabledState (STATE_CLICKTOPLAY = 1)
-    fp.set_preference("plugin.default.state", 1)
+    # STATE_DISABLED = 0
+    # https://dxr.mozilla.org/mozilla-esr45/source/dom/plugins/base/nsIPluginTag.idl#15
+    fp.set_preference("plugin.default.state", 0)
 
     # product URLs
     # The breakpad report server to link to in about:crashes
@@ -910,7 +911,7 @@ def set_mobile_prefs(fp, platform):
     fp.set_preference("dom.min_background_timeout_value", 900000)
 
     # Media plugins for libstagefright playback on android
-    fp.set_preference("media.plugins.enabled", True)
+    fp.set_preference("media.plugins.enabled", False)
 
     # Stagefright's OMXCodec::CreationFlags. The interesting flag values are:
     #  0 = Let Stagefright choose hardware or software decoding (default)
