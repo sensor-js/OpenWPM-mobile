@@ -1,0 +1,140 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+</head>
+<body>
+<h1 align="center">Sensor Value Ranges</h1>
+
+<p>Ambient light</p>
+<p id="DeviceLight"></p>
+<p id="LightString"></p>
+
+<p>Proximity</p>
+<p id="DeviceProximity"></p>
+<p id="UserProximity"></p>
+
+
+<p> Battery</p>
+<li>Is battery in charge? <span id="in-charge">unavailable</span></li>
+<li>Battery will be charged in <span id="charging-time">unavailable</span> seconds</li>
+<li>Battery will be discharged in <span id="discharging-time">unavailable</span> seconds</li>
+<li>Current battery level: <span id="battery-level">unavailable</span></li>
+
+<p>Orientation</p>
+<p id="Orientation_a"></p>
+<p id="Orientation_b"></p>
+<p id="Orientation_g"></p>
+
+<p>Accelerometer</p>
+<p id="Accelerometer_gx"></p>
+<p id="Accelerometer_gy"></p>
+<p id="Accelerometer_gz"></p>
+<p id="Accelerometer_x"></p>
+<p id="Accelerometer_y"></p>
+<p id="Accelerometer_z"></p>
+<p id="Accelerometer_i"></p>
+
+<p>Gyro</p>
+<p id="Gyro_x"></p>
+<p id="Gyro_y"></p>
+<p id="Gyro_z"></p>
+
+<p id="oscpu"></p>
+
+<script>
+
+window.addEventListener('devicelight', function(e) {
+   document.getElementById("DeviceLight").innerHTML="AmbientLight current Value: "+e.value+" Max: "+e.max+" Min: "+e.min;
+});     
+    
+window.addEventListener('lightlevel', function(e) {
+   document.getElementById("LightString").innerHTML="Light level: "+e.value; 
+});
+
+window.addEventListener('deviceproximity', function(e) {
+   document.getElementById("DeviceProximity").innerHTML="DeviceProximity current Value: "+e.value+" Max: "+e.max+" Min: "+e.min;
+});
+
+window.addEventListener('userproximity', function(event) {
+   document.getElementById("UserProximity").innerHTML="UserProximity: "+event.near;
+});
+
+
+
+navigator.getBattery().then(function(battery) {
+  function updateAllBatteryInfo(){
+    updateChargeInfo();
+    updateLevelInfo();
+    updateChargingInfo();
+    updateDischargingInfo();
+  }
+  updateAllBatteryInfo();
+
+  battery.addEventListener('chargingchange', function(){
+    updateChargeInfo();
+  });
+  function updateChargeInfo(){
+    document.getElementById('in-charge').innerHTML=battery.charging ;
+  }
+
+  battery.addEventListener('levelchange', function(){
+    updateLevelInfo();
+  });
+  function updateLevelInfo(){
+    document.getElementById('battery-level').innerHTML = battery.level;
+  }
+
+  battery.addEventListener('chargingtimechange', function(){
+    updateChargingInfo();
+  });
+  function updateChargingInfo(){
+    document.getElementById('charging-time').innerHTML = battery.chargingTime;
+  }
+
+  battery.addEventListener('dischargingtimechange', function(){
+    updateDischargingInfo();
+  });
+  function updateDischargingInfo(){
+    document.getElementById('discharging-time').innerHTML = battery.dischargingTime;
+  }
+
+});
+
+//window.addEventListener('devicemotion', motionHandler);
+//window.ondevicemotion = motionHandler;
+
+window.addEventListener("deviceorientation", handleOrientation);
+
+function handleOrientation(event) {
+  var absolute = event.absolute;
+  var alpha    = event.alpha;
+  var beta     = event.beta;
+  var gamma    = event.gamma;
+  document.getElementById('Orientation_a').innerHTML = "Z-axis: "+alpha.toFixed(10);
+  document.getElementById('Orientation_b').innerHTML = "X-axis: "+beta.toFixed(10);
+  document.getElementById('Orientation_g').innerHTML = "Y-axis: "+gamma.toFixed(10);
+  // Do stuff with the new orientation data
+}
+
+
+window.addEventListener("devicemotion", handleMotion);
+
+function handleMotion(event) {
+  document.getElementById('Accelerometer_gx').innerHTML = "AccelerometerIncludingGravity X-axis: "+event.accelerationIncludingGravity.x.toFixed(10);
+  document.getElementById('Accelerometer_gy').innerHTML = "AccelerometerIncludingGravity Y-axis: "+event.accelerationIncludingGravity.y.toFixed(10);
+  document.getElementById('Accelerometer_gz').innerHTML = "AccelerometerIncludingGravity Z-axis: "+event.accelerationIncludingGravity.z.toFixed(10);
+  document.getElementById('Accelerometer_x').innerHTML = "Accelerometer X-axis: "+event.acceleration.x.toFixed(10);
+  document.getElementById('Accelerometer_y').innerHTML = "Accelerometer Y-axis: "+event.acceleration.y.toFixed(10);
+  document.getElementById('Accelerometer_z').innerHTML = "Accelerometer Z-axis: "+event.acceleration.z.toFixed(10);
+  document.getElementById('Accelerometer_i').innerHTML = "Data Interval: "+event.interval.toFixed(10);
+  document.getElementById('Gyro_z').innerHTML = "Gyro Z-axis: "+event.rotationRate.alpha.toFixed(10);
+  document.getElementById('Gyro_x').innerHTML = "Gyro X-axis: "+event.rotationRate.beta.toFixed(10);
+  document.getElementById('Gyro_y').innerHTML = "Gyro Y-axis: "+event.rotationRate.gamma.toFixed(10);
+  //setTimeout(handler,5000);
+}
+
+document.getElementById('oscpu').innerHTML = "OSCPU: "+window.navigator.oscpu;
+
+</script>
+
+
+</body></html>
