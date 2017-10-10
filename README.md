@@ -1,4 +1,4 @@
-OpenWPM [![Build Status](https://travis-ci.org/gunesacar/OpenWPM_mobile.svg?branch=master)](https://travis-ci.org/gunesacar/OpenWPM_mobile)
+OpenWPM [![Build Status](https://travis-ci.com/gunesacar/OpenWPM_mobile.svg?branch=master)](https://travis-ci.com/gunesacar/OpenWPM_mobile)
 =======
 
 OpenWPM is a web privacy measurement framework which makes it easy to collect
