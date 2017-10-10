@@ -116,7 +116,11 @@ class TestCrawl(OpenWPMTest):
                                       "SELECT visit_id FROM site_visits "
                                       "WHERE site_url = ?",
                                       ('http://' + url,))
-            visit_id = rows[0]
+
+            try:
+                visit_id = rows[0][0]
+            except Exception:
+                visit_id = rows[0]
 
             rows = db_utils.query_db(crawl_db,
                                       "SELECT COUNT(*) FROM http_responses "
