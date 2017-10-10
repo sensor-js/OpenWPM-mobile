@@ -221,7 +221,7 @@ class TestPOSTInstrument(OpenWPMTest):
             css_file_upload_element = driver.find_element_by_id("upload-css")
             img_file_upload_element.send_keys(img_file_path)
             css_file_upload_element.send_keys(css_file_path)
-            sleep(5)  # wait for the form submission (3 sec after onload)
+            sleep(7)  # wait for the form submission (5 sec after onload)
 
         manager_params, browser_params = self.get_config()
         manager = TaskManager.TaskManager(manager_params, browser_params)

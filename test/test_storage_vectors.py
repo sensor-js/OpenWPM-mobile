@@ -1,3 +1,4 @@
+import pytest
 import utilities
 from ..automation import CommandSequence
 from ..automation import TaskManager
@@ -40,6 +41,7 @@ class TestStorageVectors(OpenWPMTest):
     def get_config(self, data_dir=""):
         return self.get_test_config(data_dir)
 
+    @pytest.mark.skip("Flash is not used for mobile crawls")
     def test_flash_cookies(self):
         """ Check that some Flash LSOs are saved and
         are properly keyed in db."""
