@@ -1,9 +1,11 @@
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from os.path import join, realpath, dirname
 from pyvirtualdisplay import Display
 from collections import OrderedDict
 from selenium import webdriver
 from tabulate import tabulate
 from copy import deepcopy
+import commands
 import subprocess
 import shutil
 import json
@@ -31,6 +33,14 @@ def parse_http_stack_trace_str(trace_str):
         except Exception as exc:
             print "Exception parsing the stack frame %s %s" % (frame, exc)
     return stack_trace
+
+
+def create_xpi():
+    """Creates a new extension xpi using jpm."""
+    ext_dirname = join(dirname(realpath(__file__)), '..', 'Extension',
+                       'firefox')
+    return commands.getstatusoutput("cd %s && jpm xpi" % ext_dirname)
+
 
 def get_version():
     """Return OpenWPM version tag/current commit and Firefox version """

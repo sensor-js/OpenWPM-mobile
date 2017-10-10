@@ -2,7 +2,7 @@ from BrowserManager import Browser
 from DataAggregator import DataAggregator, LevelDBAggregator
 from SocketInterface import clientsocket
 from Errors import CommandExecutionError
-from utilities.platform_utils import get_version, get_configuration_string
+from utilities.platform_utils import get_version, get_configuration_string, create_xpi
 import CommandSequence
 import MPLogger
 
@@ -87,6 +87,12 @@ class TaskManager:
             self.failure_limit = self.num_browsers * 2 + 10
 
         self.process_watchdog = process_watchdog
+
+        # Build instrumentation extension
+        rv = create_xpi()
+        if rv[0] != 0:
+            raise RuntimeError("OpenWPM Extension failed to "
+                               "build with error: %s" % rv[1])
 
         # sets up the crawl data database
         db_path = manager_params['database_name']
