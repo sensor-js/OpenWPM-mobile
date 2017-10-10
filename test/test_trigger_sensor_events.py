@@ -15,7 +15,6 @@ class TestTriggerSensorEvents(OpenWPMTest):
     def test_trigger_sensor_events(self):
         manager_params, browser_params = self.get_config()
         browser_params[0]['trigger_sensor_events'] = True
-        browser_params[0]['headless'] = False
         manager = TaskManager.TaskManager(manager_params, browser_params)
         test_url = utilities.BASE_TEST_URL + '/sensor_value_test.html'
 
@@ -70,7 +69,7 @@ class TestTriggerSensorEvents(OpenWPMTest):
             assert "Accelerometer Y-axis: " in\
                 get_text_from_el(driver, "Accelerometer_y")
             assert "Accelerometer Z-axis: " in\
-                get_text_from_el(driver, "Accelerometer_y")
+                get_text_from_el(driver, "Accelerometer_z")
             assert "Data Interval: " in\
                 get_text_from_el(driver, "Accelerometer_i")
 
@@ -84,7 +83,6 @@ class TestTriggerSensorEvents(OpenWPMTest):
         cs = CommandSequence.CommandSequence(test_url, blocking=True)
         cs.get(sleep=5, timeout=60)
         cs.run_custom_function(check_trigger_sensor_events)
-        with pytest.raises(AssertionError):
-            manager.execute_command_sequence(cs)
-            manager.close()
+        manager.execute_command_sequence(cs)
+        manager.close()
         assert not db_utils.any_command_failed(manager_params['db'])
