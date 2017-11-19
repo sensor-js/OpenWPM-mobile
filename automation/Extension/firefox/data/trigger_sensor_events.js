@@ -3,7 +3,7 @@ function getPageScript() {
 
   return "(" + function() {
     // Triggering sensor events every second after page load
-    setInterval(trigger_sensor_events, 1000);
+    setInterval(trigger_sensor_events, 20);
 
     function trigger_sensor_events(){
       trigger_devicelight_event();
