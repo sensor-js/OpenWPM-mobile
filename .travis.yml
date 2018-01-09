@@ -2,6 +2,7 @@ sudo: required
 language: python
 os: linux
 dist: trusty
+group: deprecated-2017Q4
 env:
 # See, https://docs.travis-ci.com/user/speeding-up-the-build/
 # We need a balanced distribution of the tests
