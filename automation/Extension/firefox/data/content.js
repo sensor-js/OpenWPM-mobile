@@ -616,6 +616,24 @@ function getPageScript() {
       logCallStack: true
     });
 
+    // Touch support spoofing
+    // document.createEvent
+    var originalCreateEvent = window.document.createEvent;
+    window.document.createEvent = function(type){
+      if (type == "TouchEvent"){
+        // We do our best to match what Firefox on Android returns
+        //"TouchEvent { target: null, isTrusted: false, touches: TouchList, targetTouches: TouchList, changedTouches: TouchList, altKey: false, metaKey: false, ctrlKey: false, shiftKey: false, view: Window}";
+        return new Event("TouchEvent", {target: null, isTrusted: false, touches: [], targetTouches: [], changedTouches: [], altKey: false, metaKey: false, ctrlKey: false, shiftKey: false, view: Window});
+      }else{
+        // call the original function for all other events
+        return originalCreateEvent(type);
+      }
+    }
+    window.ontouchstart = function(){};
+
+    // Match hardwareConcurrency property of Moto G2
+    window.navigator.hardwareConcurrency = 8;
+
     // Access to canvas
     instrumentObject(window.HTMLCanvasElement.prototype,"HTMLCanvasElement");
 
