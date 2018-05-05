@@ -634,6 +634,9 @@ function getPageScript() {
     // Match hardwareConcurrency property of Moto G2
     window.navigator.hardwareConcurrency = 8;
 
+    // Match devicePixelRatio of Firefox for Android on Moto G2
+    window.devicePixelRatio = 3;
+
     // Access to canvas
     instrumentObject(window.HTMLCanvasElement.prototype,"HTMLCanvasElement");
 
