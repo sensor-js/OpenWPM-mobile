@@ -1,11 +1,12 @@
 from automation import TaskManager, CommandSequence
 
 # The list of sites that we wish to crawl
-NUM_BROWSERS = 15
+NUM_BROWSERS = 10
 # sites = ["homes.esat.kuleuven.be/~gacar/dev/test/sensor/"]
 sites = []
 csv_name = "top-1m.csv"
-no_of_sites = 100000
+csv_name = "top35k.csv"
+no_of_sites = 1000
 for l in open(csv_name).readlines()[0:no_of_sites]:
     site = l.split(",")[-1].rstrip()
     sites.append(site)
@@ -24,8 +25,8 @@ for i in xrange(NUM_BROWSERS):
     browser_params[i]['mobile_platform'] = "android"  # or "iphone"
 
 # Update TaskManager configuration (use this for crawl-wide settings)
-manager_params['data_directory'] = '~/openwpm/'
-manager_params['log_directory'] = '~/openwpm/'
+manager_params['data_directory'] = '~/openwpm_35k/'
+manager_params['log_directory'] = '~/openwpm_35k/'
 
 # Instantiates the measurement platform
 # Commands time out by default after 60 seconds
