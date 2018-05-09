@@ -616,19 +616,36 @@ function getPageScript() {
       logCallStack: true
     });
 
-    // Touch support spoofing
-    // document.createEvent
-    var originalCreateEvent = window.document.createEvent;
-    window.document.createEvent = function(type){
-      if (type == "TouchEvent"){
-        // We do our best to match what Firefox on Android returns
-        //"TouchEvent { target: null, isTrusted: false, touches: TouchList, targetTouches: TouchList, changedTouches: TouchList, altKey: false, metaKey: false, ctrlKey: false, shiftKey: false, view: Window}";
-        return new Event("TouchEvent", {target: null, isTrusted: false, touches: [], targetTouches: [], changedTouches: [], altKey: false, metaKey: false, ctrlKey: false, shiftKey: false, view: Window});
-      }else{
-        // call the original function for all other events
-        return originalCreateEvent(type);
+    /* Most of the code below is from instrumentObject and instrumentFunction.
+     * We need to sligthly modify the function behavior to spoof,
+     * rather than just logging.*/
+    function instrumentCreateEvent(){
+      objectName = "window.document";
+      object = window.document;
+      propertyName = "createEvent";
+      var propDesc = Object.getPropertyDescriptor(object, propertyName);
+      if (!propDesc){
+        console.error("Property descriptor not found for", objectName, propertyName, object);
+        return;
       }
+      // Instrument data or accessor property descriptors
+      var originalGetter = propDesc.get;
+      var func = propDesc.value; // "createEvent" is a data property
+
+      Object.defineProperty(window.document, "createEvent", {
+        configurable: true,
+        get: (function() {
+          return function () {
+            if (arguments[0] == "TouchEvent"){
+              return new Event("TouchEvent  CALLED", {target: null, isTrusted: false, touches: [], targetTouches: [], changedTouches: [], altKey: false, metaKey: false, ctrlKey: false, shiftKey: false, view: Window});
+            }else{
+              return func.apply(this, arguments);
+            }
+          };
+        })})
     }
+    instrumentCreateEvent();
+
     window.ontouchstart = function(){};
 
     // Match hardwareConcurrency property of Moto G2
