@@ -17,7 +17,8 @@ fi
 
 sudo apt-get update
 
-sudo apt-get install -y firefox htop git python-dev libxml2-dev libxslt-dev libffi-dev libssl-dev build-essential xvfb libboost-python-dev libleveldb-dev libjpeg-dev
+# npm is required for compiling Firefox extension
+sudo apt-get install -y firefox htop git python-dev libxml2-dev libxslt-dev libffi-dev libssl-dev build-essential xvfb libboost-python-dev libleveldb-dev libjpeg-dev libgtk2.0-0 npm
 
 # For some versions of ubuntu, the package libleveldb1v5 isn't available. Use libleveldb1 instead.
 sudo apt-get install -y libleveldb1v5 || sudo apt-get install -y libleveldb1
@@ -47,3 +48,12 @@ tar jxf firefox*.tar.bz2
 rm -rf firefox-bin
 mv firefox firefox-bin
 rm firefox*.tar.bz2
+
+
+# Fix naming issue (exists in 14.04 and 16.04)
+if [ ! -f /usr/bin/node ]; then
+    sudo ln -s /usr/bin/nodejs /usr/bin/node
+fi
+
+# install jpm
+sudo npm install jpm -g
