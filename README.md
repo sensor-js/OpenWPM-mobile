@@ -21,3 +21,14 @@ Edit [`mobile_sensor_crawl.py`](https://github.com/sensor-js/OpenWPM_mobile/blob
 Then start a crawl by running:
 
 ```python mobile_sensor_crawl.py```
+
+## Running tests
+
+The following will run all the tests:
+
+```pytest test```
+
+Run the following to run all tests except `test_crawl.py`, which simulates a small-scale crawl (slow).
+
+```pytest test -m "not slow"```
+
