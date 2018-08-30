@@ -14,6 +14,12 @@ To install the analysis related packages and files:
 
 ```install-analysis.sh```
 
+## Emulating Mobile Platform
+
+To ensure our crawler is identifed as a mobile device (to the best effort possible) pease execute the following script on your crawling machine.
+
+```......```
+
 ## Basic usage
 
 Edit [`mobile_sensor_crawl.py`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/mobile_sensor_crawl.py) to change the crawl parameters, such as number of sites to crawl and the number of browsers to run in parallel.
@@ -42,4 +48,20 @@ Run the following to run all tests except `test_crawl.py`, which simulates a sma
 
 2. Once features are extracted you can generate clusters from the extracted features by using the [`Clustering_JS_scripts.ipynb`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/cluster_scripts/Clustering_JS_scripts.ipynb) ipyhton notebook script. 
 
-    Make sure to point to the newly generated feature file (```features.csv```) from the previous step (step 1).
+    Make sure to point to the newly generated feature file (```features.csv```) from the step 1.
+    
+## Citation
+If you use OpenWPM_Mobile in your research, please cite our CCS 2018 [`publication`](). You can use the following BibTeX.
+
+```
+@inproceedings{sensor-js-2018,
+    author    = "Anupam Das and Gunes Acar and Nikita Borisov and Amogh Pradeep",
+    title     = "{The Web's Sixth Sense: A Study of Scripts Accessing Smartphone Sensors}",
+    booktitle = {Proceedings of ACM CCS 2018},
+    year      = "2018",
+}
+```
+
+## License
+OpenWPM_Mobile is licensed under GNU GPLv3. Additional code has been included from ...
+    
