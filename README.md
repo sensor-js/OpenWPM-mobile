@@ -32,3 +32,14 @@ Run the following to run all tests except `test_crawl.py`, which simulates a sma
 
 ```pytest test -m "not slow"```
 
+## Data Analysis
+
+1. To extract features for each script discovered in the crawl run the following command:
+
+```python extract_features.py```
+
+Make sure to point to the correct database containing the crawl results inside [`extract_features.py`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/feature_extraction/extract_features.py#L813).
+
+2. Once features are extracted you can generate clusters from the extracted features by using the [`Clustering_JS_scripts.ipynb`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/cluster_scripts/Clustering_JS_scripts.ipynb) ipyhton notebook script. 
+
+Make sure to point to the newly generated feature file (```features.csv```) from the previous step (step 1).
