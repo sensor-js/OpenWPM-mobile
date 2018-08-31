@@ -14,6 +14,16 @@ To install the analysis related packages and files:
 
 ```install-analysis.sh```
 
+
+## Basic usage
+
+Edit [`mobile_sensor_crawl.py`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/mobile_sensor_crawl.py) to change the crawl parameters, such as number of sites to crawl and the number of browsers to run in parallel.
+
+Then start a crawl by running:
+
+```python mobile_sensor_crawl.py```
+
+
 ## Imitating Mobile Browser
 OpenWPM-Mobile takes several steps to realistically imitate Firefox for Android.
 
@@ -31,14 +41,6 @@ Android fonts on our crawler machines to mitigate font-based
 fingerprinting. You may follow the instructions provided in
 [EmulatingAndroidFonts.md](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/EmulatingAndroidFonts.md)
 to install Android fonts on your crawler machines.
-
-## Basic usage
-
-Edit [`mobile_sensor_crawl.py`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/mobile_sensor_crawl.py) to change the crawl parameters, such as number of sites to crawl and the number of browsers to run in parallel.
-
-Then start a crawl by running:
-
-```python mobile_sensor_crawl.py```
 
 ## Running tests
 
