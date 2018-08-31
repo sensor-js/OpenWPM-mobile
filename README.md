@@ -33,7 +33,7 @@ The following will run all the tests:
 
 ```pytest test```
 
-Run the following to run all tests except `test_crawl.py`, which simulates a small-scale crawl (slow).
+If you don't want to run the (slow) crawling test `test_crawl.py` execute the following:
 
 ```pytest test -m "not slow"```
 
@@ -45,12 +45,12 @@ Run the following to run all tests except `test_crawl.py`, which simulates a sma
 
     Make sure to point to the correct database containing the crawl results inside [`extract_features.py`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/feature_extraction/extract_features.py#L813).
 
-2. Once features are extracted you can generate clusters from the extracted features by using the [`Clustering_JS_scripts.ipynb`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/cluster_scripts/Clustering_JS_scripts.ipynb) ipyhton notebook script. 
+2. Once features are extracted you can generate clusters from the extracted features by using the [`Clustering_JS_scripts.ipynb`](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/cluster_scripts/Clustering_JS_scripts.ipynb) Jupyter notebook.
 
     Make sure to point to the newly generated feature file (```features.csv```) from the step 1.
     
 ## Citation
-If you use OpenWPM_Mobile in your research, please cite our CCS 2018 [`publication`](). You can use the following BibTeX.
+If you use OpenWPM_Mobile in your research, please cite our CCS 2018 [`paper`](). You can use the following BibTeX.
 
 ```
 @inproceedings{sensor-js-2018,
@@ -62,5 +62,10 @@ If you use OpenWPM_Mobile in your research, please cite our CCS 2018 [`publicati
 ```
 
 ## License
-OpenWPM_Mobile is licensed under GNU GPLv3. Additional code has been included from ...
+
+OpenWPM-Mobile is licensed under GNU GPLv3. Additional code has been included from
+[OpenWPM](https://github.com/citp/OpenWPM) (which OpenWPM-Mobile is based on),
+[FourthParty](https://github.com/fourthparty/fourthparty) and
+[Privacy Badger](https://github.com/EFForg/privacybadgerfirefox), all of which
+are licensed GPLv3+.
     
