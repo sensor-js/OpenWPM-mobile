@@ -14,11 +14,10 @@ To install the analysis related packages and files:
 
 ```install-analysis.sh```
 
-## Emulating Mobile Platform
+## Emulating Android fonts
 
-To ensure our crawler is identifed as a mobile device (to the best effort possible) pease execute the following script on your crawling machine.
+To ensure that your crawler is identifed as a mobile device (to the best effort possible) follow the instructions provided in [EmulatingAndroidFonts.md](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/EmulatingAndroidFonts.md) to install Android fonts on your crawler machines.
 
-```......```
 
 ## Basic usage
 
