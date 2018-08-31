@@ -1,4 +1,4 @@
-from tld import get_tld
+from tld import get_fld
 from urlparse import urlparse
 import ipaddress
 import json
@@ -6,12 +6,12 @@ import json
 DISCONNECT_JSON = "adblock/disconnect.json"
 
 
-def get_tld_or_host(url):
+def get_ps1_or_host(url):
     if not url.startswith("http"):
         url = 'http://' + url
 
     try:
-        return get_tld(url, fail_silently=False)
+        return get_fld(url, fail_silently=False)
     except Exception:
         hostname = urlparse(url).hostname
         try:
@@ -26,11 +26,11 @@ def is_third_party(url, site_url):
     if not site_url:
         return False
 
-    site_ps1 = get_tld_or_host(site_url)
+    site_ps1 = get_ps1_or_host(site_url)
     if site_ps1 is None:
         return False
 
-    req_ps1 = get_tld_or_host(url)
+    req_ps1 = get_ps1_or_host(url)
     if req_ps1 is None:
         # print url
         return False

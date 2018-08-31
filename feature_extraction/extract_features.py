@@ -11,7 +11,7 @@ from _collections import defaultdict
 from adblockparser import AdblockRules
 from feature_extraction.utils import (is_third_party, is_blocked_by_disconnect,
                                       get_disconnect_blocked_hosts)
-from feature_extraction.utils import get_tld_or_host
+from feature_extraction.utils import get_ps1_or_host
 
 SCRIPT_COUNTRY_JSON = "script_country_map_top10k.json"
 SCRIPT_CATEGORY_JSON = "script_categories_top10k.json"
@@ -333,7 +333,7 @@ def extract_features(db_file, out_csv, max_rank=0):
         script_ranks[script_adress].add(visit_id)
 
         if feat in SENSOR_FEATURES:
-            script_domain = get_tld_or_host(script_url)
+            script_domain = get_ps1_or_host(script_url)
             sensor_visit_ids[feat].add(visit_id)
             sensor_script_domain_visit_ids[feat][script_domain].add(visit_id)
             sensor_script_url_visit_ids[feat][script_adress].add(visit_id)
