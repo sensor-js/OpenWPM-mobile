@@ -14,10 +14,23 @@ To install the analysis related packages and files:
 
 ```install-analysis.sh```
 
-## Emulating Android fonts
+## Imitating Mobile Browser
+OpenWPM-Mobile takes several steps to realistically imitate Firefox for Android.
 
-To ensure that your crawler is identifed as a mobile device (to the best effort possible) follow the instructions provided in [EmulatingAndroidFonts.md](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/EmulatingAndroidFonts.md) to install Android fonts on your crawler machines.
+This involves overriding navigator object’s user agent, platform,
+appVersion and appCodeName strings; matching the screen resolution,
+screen dimensions, pixel depth, color depth; enabling touch
+status; removing plugins and supported MIME types that may indicate a desktop browser.
 
+OpenWPM-Mobile also uses the preferences used to configure Firefox
+for Android such as hiding the scroll bars and disabling popup windows.
+We relied on the values provided in the [`mobile.js`](https://dxr.mozilla.org/mozilla-esr45/source/mobile/android/app/mobile.js) script found in the Firefox for Android source code repository.
+
+When running crawls with OpenWPM-Mobile we installed 
+Android fonts on our crawler machines to mitigate font-based
+fingerprinting. You may follow the instructions provided in
+[EmulatingAndroidFonts.md](https://github.com/sensor-js/OpenWPM_mobile/blob/mobile_sensors/EmulatingAndroidFonts.md)
+to install Android fonts on your crawler machines.
 
 ## Basic usage
 
