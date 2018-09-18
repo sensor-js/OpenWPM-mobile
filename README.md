@@ -2,7 +2,7 @@ OpenWPM-Mobile [![Build Status](https://travis-ci.org/sensor-js/OpenWPM-mobile.s
 =======
 
 OpenWPM-Mobile is a mobile web privacy measurement framework that is based on
-OpenWPM.
+[OpenWPM](https://github.com/citp/OpenWPM). OpenWPM-Mobile is developed for the paper titled "[`The Web's Sixth Sense: A Study of Scripts Accessing Smartphone Sensors`](https://sensor-js.xyz)" to measure the ecosystem of scripts accessing mobile sensors.
 
 ## Installation
 
@@ -54,7 +54,13 @@ If you don't want to run the (slow) crawling test `test_crawl.py` execute the fo
 
 ## Data Analysis
 
-1. To extract features for each script discovered in the crawl run the following command:
+Consult to the [OpenWPM repository](https://github.com/citp/OpenWPM#instrumentation-and-data-access) for details of the data format.
+
+### Feature extraction and clustering
+
+Follow the steps below to extract binary script features and cluster scripts similar using the methodology described in the [paper](https://sensor-js.xyz/ccs-18-a-study-of-scripts-accessing-smartphone-sensors.pdf).
+
+1. Run the following command to extract features for scripts discovered in the crawl:
 
     ```python extract_features.py```
 
@@ -65,7 +71,7 @@ If you don't want to run the (slow) crawling test `test_crawl.py` execute the fo
     Make sure to point to the newly generated feature file (```features.csv```) from the step 1.
     
 ## Citation
-If you use OpenWPM_Mobile in your research, please cite our CCS 2018 [`paper`](). You can use the following BibTeX.
+If you use OpenWPM-Mobile in your research, please cite our CCS 2018 paper titled [`The Web's Sixth Sense: A Study of Scripts Accessing Smartphone Sensors`](https://sensor-js.xyz/ccs-18-a-study-of-scripts-accessing-smartphone-sensors.pdf). You can use the following BibTeX.
 
 ```
 @inproceedings{sensor-js-2018,
